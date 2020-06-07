@@ -81,11 +81,15 @@ namespace IngredientRecommender
             MLContext ml = new MLContext();
             DataManager dm = new DataManager();
 
+            // get test data
             Data[] test_data = dm.GetRecipes(ModelChoice.KNN, DataPurpose.TEST);
+            // get features (ingredients)
             string[] ingrNames = dm.GetFeatures();
 
+            // group data by recipeId
             IGrouping<int, Data>[] recipes = test_data.GroupBy(d => d.recipeId).ToArray();
 
+            // keep track of the k values
             int[] new_ks = new int[recipes.Length];
             int index = 0;
 
@@ -168,14 +172,14 @@ namespace IngredientRecommender
                         // iterate through all features (unique ingredients)
                         for (int i = 0; i < ingrNames.Length; i++)
                         {
-                            // keep track of votes (either recommended or not_recommended)
+                            // keep track of votes
                             double recommended = 0;
                             double not_recommended = 0;
 
                             // find k nearest neighbors
                             for (int top = 0; top < k; top++)
                             {
-                                // recommend ingredient if the majority of neighbors contains the ingredient
+                                // recommend ingredient
                                 if (distances[top].recipe.Contains(i))
                                 {
                                     if (voting.Equals(Voting.Unweighted))
@@ -187,6 +191,7 @@ namespace IngredientRecommender
                                         recommended += distances[top].distance;
                                     }
                                 }
+                                // do not recommend ingredient
                                 else
                                 {
                                     if (voting.Equals(Voting.Unweighted))

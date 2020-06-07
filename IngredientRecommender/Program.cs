@@ -22,6 +22,7 @@ namespace IngredientRecommender
             Console.WriteLine("3: See example recipes");
             Console.WriteLine("4: See all ingredients");
             Console.WriteLine("5: Find optimal k");
+            Console.WriteLine("6: Compare Recommendations (Naive Bayes vs. Modified KNN)");
 
             string option = Console.ReadLine();
             UserRequest req = new UserRequest();
@@ -36,18 +37,22 @@ namespace IngredientRecommender
                 Console.WriteLine("4: Modified k Nearest Neighbor");
 
                 option = Console.ReadLine();
+                // Naive Bayes
                 if (option == "1")
                 {
                     Evaluate(ModelChoice.NB);
                 }
+                // NMF
                 else if (option == "2")
                 {
                     Evaluate(ModelChoice.NMF);
                 }
+                // k Nearest Neighbors
                 else if (option == "3")
                 {
                     Evaluate(ModelChoice.KNN);
                 }
+                // Modified KNN
                 else if (option == "4")
                 {
                     Evaluate(ModelChoice.MKNN);
@@ -122,6 +127,11 @@ namespace IngredientRecommender
                 }
                 return false;
             }
+            else if (option == "6")
+            {
+                CompareRecommendations();
+                return false;
+            }
             return true;
         }
         // Evaluate different models
@@ -172,6 +182,7 @@ namespace IngredientRecommender
                 eval.EvaluateModifiedKNN(DistanceChoice.Jaccard_Similarity, Voting.Unweighted);
             }
         }
+        // Compare Recommendations (Naive Bayes vs. Modified KNN)
         static void CompareRecommendations()
         {
             UserRequest request = new UserRequest();
@@ -182,15 +193,16 @@ namespace IngredientRecommender
             string[] fourth = new string[4] { "mushrooms", "chicken breast", "chicken broth", "sugar" };
             string[] fifth = new string[7] { "confectioners sugar", "cocoa powder", "condensed milk", "applesauce", "almond extract", "cheddar cheese", "buttermilk" };
 
-            foreach (ModelChoice item in Enum.GetValues(typeof(ModelChoice)))
+            ModelChoice[] modelChoices = new ModelChoice[2] { ModelChoice.NB, ModelChoice.MKNN };
+            foreach (ModelChoice item in modelChoices)
             {
                 // recommend ingredients to ADD
                 request.TopRecommendations(10, first, item, true, false);
                 request.TopRecommendations(10, second, item, true, false);
                 request.TopRecommendations(10, third, item, true, false);
                 // recommend ingredients to REMOVE
-                request.TopRecommendations(10, fourth, item, false, false);
-                request.TopRecommendations(10, fifth, item, false, false);
+                request.TopRecommendations(10, fourth, item, false, true);
+                request.TopRecommendations(10, fifth, item, false, true);
             }
         }
     }

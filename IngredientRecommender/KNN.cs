@@ -61,7 +61,6 @@ namespace IngredientRecommender
         }
         public Recommendation[] ModifiedKNN(Recommendation[] recommendations, Neighbors[] distances, int[] current_recipe, string[] ingrNames, ref int new_k, int max_k)
         {
-            // TODO: REMOVE iterate through all features (unique ingredients)
             for (int k = 0; k < max_k; k++)
             {
                 // for each ingredient in current neighbor, increase ingrs by similarity score

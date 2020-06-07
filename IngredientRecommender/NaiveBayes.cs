@@ -75,6 +75,7 @@ namespace IngredientRecommender
             // get training data
             Data[] train_recipes = dm.GetRecipes(ModelChoice.NB, DataPurpose.TRAIN);
             IGrouping<int, Data>[] distinct_recipes = train_recipes.Where(r => r.score == 1).GroupBy(r => r.recipeId).ToArray();
+            // get features (ingredients)
             string[] ingrNames = dm.GetFeatures();
 
             // matrix of ingredients

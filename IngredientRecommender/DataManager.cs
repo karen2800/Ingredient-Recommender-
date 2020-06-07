@@ -160,6 +160,7 @@ namespace IngredientRecommender
             return data;
         }
         // Get Recipe
+        // Convert Data[] to int[]
         public int[] GetRecipe(Data[] currRecipe)
         {
             int[] recipeIngrs = new int[currRecipe.Length];

@@ -60,6 +60,7 @@ namespace IngredientRecommender
             // get recipe
             Data[] recipe = data.Where(d => d.recipeId == r && d.score == 1).ToArray();
 
+            // display recipe
             if (display_recipe == true)
             {
                 Console.Write(recipe[0].ingredient.name);
@@ -108,7 +109,7 @@ namespace IngredientRecommender
             }
             Console.WriteLine();
         }
-        // Ingredients to Add/Remove to/from your recipe
+        // Ingredients to ADD to or REMOVE from a recipe
         public void TopRecommendations(int top, string[] recipe_str, ModelChoice model_choice, bool add, bool include_recipe_ingrs)
         {
             DataManager dm = new DataManager();
@@ -123,13 +124,17 @@ namespace IngredientRecommender
             {
                 try
                 {
+                    // trim and make lowercase
                     recipe_str[i] = recipe_str[i].Trim().ToLower();
+
                     // find ingredient 
                     recipe[i] = data.Where(d => d.ingredient.name.Equals(recipe_str[i])).ToArray()[0].ingredient.id;
                 }
                 catch
                 {
+                    // get features (ingredients)
                     string[] features = GetAllIngredients(false);
+
                     bool found = false;
                     // try finding a similar ingredient
                     foreach (string ingr in features)
@@ -156,16 +161,19 @@ namespace IngredientRecommender
 
             // keep track of ingredient recommendations
             Recommendation[] recommendations = null;
+            // Naive Bayes
             if (model_choice.Equals(ModelChoice.NB))
             {
                 NaiveBayes nb = new NaiveBayes();
                 recommendations = nb.RecipeRecommendations(nb.GetModel(), recipe, true, true, false);
             }
+            // k Nearest Neighbors
             else if (model_choice.Equals(ModelChoice.KNN))
             {
                 KNN knn = new KNN();
                 recommendations = knn.GetRecommendations(6, DistanceChoice.Jaccard, recipe, Voting.Unweighted);
             }
+            // Modified k Nearest Neighbors (dynamic k)
             else if (model_choice.Equals(ModelChoice.MKNN))
             {
                 KNN knn = new KNN();
@@ -183,6 +191,7 @@ namespace IngredientRecommender
 
                 for (int i = 0; i < top; i++)
                 {
+                    // skip ingredients in recipe
                     if (include_recipe_ingrs == false && recipe_str.Contains(recommendations[i].ingredient.name))
                     {
                         top++;
@@ -201,11 +210,6 @@ namespace IngredientRecommender
                 recommendations = recommendations.OrderBy(d => d.score).ToArray();
                 for (int i = 0; i < recipe.Length; i++)
                 {
-                    if (include_recipe_ingrs == false && recipe_str.Contains(recommendations[i].ingredient.name))
-                    {
-                        top++;
-                        continue;
-                    }
                     Console.WriteLine(recommendations[i].ingredient.name);
                 }
             }
