@@ -22,3 +22,6 @@ To deal with the imbalance in my data, I decided to modify my KNN solution so th
 ### Conclusions
 Overall, I was able to recommend ingredients to recipes. Naïve Bayes performed the best when using normalization, laplace smoothing, and uniform prior. Normalization, in particular, made the biggest difference in the increase in f1 scores. This means that normalization was able to effectively deal with the imbalance problem. My second-best model was Modified k Nearest Neighbors, which attempted to deal with the popularity of ingredients problem. Using a dynamic k and increasing ingredient scores by Jaccard similarity for each neighboring recipe containing it helped deal with this ingredient distribution imbalance. Understanding the data was very important because once I addressed the imbalance problem, the accuracy of my models increased significantly. 
 
+
+See updated version here: https://github.com/karen2800/Ingredient-Recommender
+
